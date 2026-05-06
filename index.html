@@ -148,8 +148,7 @@
   </a>
   <div class="nav-links">
     <a href="#" onclick="showTab('uc1',null,this);return false;" id="nav-uc1" class="active">01 · US B2B Portal</a>
-    <a href="#" onclick="showTab('uc2',null,this);return false;" id="nav-uc2">02 · Commercial Sign-Up</a>
-    <a href="#" onclick="showTab('uc3',null,this);return false;" id="nav-uc3">03 · F45 Market</a>
+    <a href="#" onclick="showTab('uc3',null,this);return false;" id="nav-uc3">02 · F45 Market</a>
     <a href="#" onclick="showTab('roadmap',null,this);return false;" id="nav-roadmap" style="color:#0d0d0d; background:#95BF47; padding:6px 14px; border-radius:5px; font-weight:800; letter-spacing:0.5px;">🚀 Launch Roadmap</a>
   </div>
 </nav>
@@ -160,8 +159,7 @@
   <p class="hero-sub">Launching with US B2B — then a repeatable framework to roll out across markets and regions without starting from scratch. Every use case below is V1 of a platform that grows with REP Fitness.</p>
   <div class="use-case-pills">
     <a href="#" onclick="showTab('uc1',null,document.getElementById('nav-uc1'));return false;" class="uc-pill uc-pill-1">01 · US B2B Portal</a>
-    <a href="#" onclick="showTab('uc2',null,document.getElementById('nav-uc2'));return false;" class="uc-pill uc-pill-2">02 · Commercial Sign-Up</a>
-    <a href="#" onclick="showTab('uc3',null,document.getElementById('nav-uc3'));return false;" class="uc-pill uc-pill-3">03 · F45 Market</a>
+    <a href="#" onclick="showTab('uc3',null,document.getElementById('nav-uc3'));return false;" class="uc-pill uc-pill-3">02 · F45 Market</a>
   </div>
   <div style="margin-top:28px;">
     <a href="#" onclick="showTab('roadmap',null,document.getElementById('nav-roadmap'));return false;" style="display:inline-flex; align-items:center; gap:8px; background:#95BF47; color:#0d0d0d; font-size:13px; font-weight:800; padding:10px 22px; border-radius:6px; text-decoration:none; letter-spacing:0.5px;">&#128640; View Launch Roadmap</a>
@@ -174,9 +172,9 @@
        USE CASE 1: B2B PORTAL
   ============================= -->
   <div class="uc-section" id="uc1">
-    <div class="uc-tag uc-tag-1">Use Case 01 — US B2B Portal</div>
-    <div class="uc-title">Self-Serve <span class="g">Reorder Portal</span></div>
-    <p class="uc-subtitle">Start with US. Build it so UK and EU are a configuration, not a rebuild. Existing B2B customers log in, browse by collection, and place orders without touching a rep — and the same infrastructure powers every market you add after.</p>
+    <div class="uc-tag uc-tag-1">Use Case 01 — US B2B Portal &amp; Sign-Up</div>
+    <div class="uc-title">US B2B Portal <span class="g">&amp; Commercial Sign-Up</span></div>
+    <p class="uc-subtitle">A unified commercial layer for REP Fitness: existing accounts get a self-serve reorder portal, and new commercial buyers apply through a purpose-built form that routes directly into Shopify and HubSpot. Both are built on the same foundation — US first, designed to scale to every market after.</p>
 
     <div class="goal-bar">
       <div class="label">The Goal</div>
@@ -309,16 +307,12 @@
     </div>
   </div>
 
-
-</div><!-- /view-uc1 -->
-
-<div id="view-uc2" class="page" style="display:none;">
   <!-- ============================
-       USE CASE 2: SIGN-UP FLOW
+       SIGN-UP FLOW (combined into UC1)
   ============================= -->
-  <div class="uc-section" id="uc2">
-    <div class="uc-tag uc-tag-2">Use Case 02</div>
-    <div class="uc-title">Commercial <span class="p">Sign-Up Flow</span></div>
+  <div class="uc-section" id="uc2" style="border-top:1px solid #1a1a1a; margin-top:64px; padding-top:64px;">
+    <div class="uc-tag uc-tag-2">Commercial Sign-Up Flow</div>
+    <div class="uc-title">Application <span class="p">Form &amp; CRM Routing</span></div>
     <p class="uc-subtitle">A purpose-built application form for commercial buyers — collected via Shopify Forms, automatically creating an unapproved company record, and notifying the sales team in HubSpot so they can vet and activate accounts without any manual data entry.</p>
 
     <div class="goal-bar goal-bar-2">
@@ -453,7 +447,6 @@
   </div>
 
 
-</div><!-- /view-uc2 -->
 
 <div id="view-uc3" class="page" style="display:none;">
   <!-- ============================
@@ -598,21 +591,15 @@
     <p class="uc-subtitle">Four weeks. Three use cases. REP Fitness owns the build — Shopify provides guidance, configuration recommendations, and a standing twice-weekly check-in to keep momentum and answer questions in real time.</p>
 
     <!-- USE CASE CLICKOUTS -->
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:32px 0 28px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:32px 0 28px;">
       <a href="#" onclick="showTab('uc1',null,document.getElementById('nav-uc1'));return false;" style="text-decoration:none; background:#0d2018; border:1px solid rgba(149,191,71,0.2); border-radius:10px; padding:20px 22px; display:block; transition:border-color 0.2s;">
         <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#95BF47; margin-bottom:8px;">Use Case 01</div>
-        <div style="font-size:14px; font-weight:800; color:#fff; margin-bottom:6px;">US B2B Portal</div>
-        <div style="font-size:12px; color:#666; line-height:1.5;">Self-serve reorder portal for existing commercial accounts. US first, built to scale to every geo.</div>
+        <div style="font-size:14px; font-weight:800; color:#fff; margin-bottom:6px;">US B2B Portal &amp; Sign-Up</div>
+        <div style="font-size:12px; color:#666; line-height:1.5;">Self-serve reorder portal + commercial application form. Existing accounts reorder, new accounts apply — both automated end-to-end.</div>
         <div style="font-size:11px; color:#95BF47; margin-top:12px; font-weight:700;">View details ↗</div>
       </a>
-      <a href="#" onclick="showTab('uc2',null,document.getElementById('nav-uc2'));return false;" style="text-decoration:none; background:#0c0c20; border:1px solid rgba(99,102,241,0.2); border-radius:10px; padding:20px 22px; display:block; transition:border-color 0.2s;">
-        <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#a5b4fc; margin-bottom:8px;">Use Case 02</div>
-        <div style="font-size:14px; font-weight:800; color:#fff; margin-bottom:6px;">Commercial Sign-Up</div>
-        <div style="font-size:12px; color:#666; line-height:1.5;">Wholesale application flow — Shopify Forms → Flow → HubSpot. Leads land in the CRM automatically.</div>
-        <div style="font-size:11px; color:#a5b4fc; margin-top:12px; font-weight:700;">View details ↗</div>
-      </a>
       <a href="#" onclick="showTab('uc3',null,document.getElementById('nav-uc3'));return false;" style="text-decoration:none; background:#1a1200; border:1px solid rgba(245,158,11,0.2); border-radius:10px; padding:20px 22px; display:block; transition:border-color 0.2s;">
-        <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#fcd34d; margin-bottom:8px;">Use Case 03</div>
+        <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#fcd34d; margin-bottom:8px;">Use Case 02</div>
         <div style="font-size:14px; font-weight:800; color:#fff; margin-bottom:6px;">F45 Branded Market</div>
         <div style="font-size:12px; color:#666; line-height:1.5;">Dedicated F45 channel with exclusive pricing, custom storefront, and franchise-level company records.</div>
         <div style="font-size:11px; color:#fcd34d; margin-top:12px; font-weight:700;">View details ↗</div>
@@ -921,7 +908,7 @@
 
 <script>
   function showTab(tab, anchor, el) {
-    var views = ['view-uc1','view-uc2','view-uc3','view-roadmap'];
+    var views = ['view-uc1','view-uc3','view-roadmap'];
     var hero = document.querySelector('.hero');
     document.querySelectorAll('.nav-links a').forEach(function(a){ a.classList.remove('active'); });
     if (el) el.classList.add('active');
