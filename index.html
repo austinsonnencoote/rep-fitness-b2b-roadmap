@@ -348,9 +348,26 @@
       <div class="step">
         <div class="step-num step-num-p">3</div>
         <div class="step-body">
-          <h5>Push the Lead to HubSpot</h5>
-          <p>The HubSpot for Shopify integration syncs customer and company data bidirectionally. When a new unapproved company is created via Flow, a contact and deal can be created automatically in HubSpot — so the sales team's notification and pipeline management lives where they already work, not in Shopify admin.</p>
-          <div class="step-note p">HubSpot Shopify Integration → Map Company fields → Auto-create Contact + Deal → Trigger sales team notification</div>
+          <h5>Push the Lead to HubSpot via Shopify Flow API Action</h5>
+          <p>Immediately after the Company record is created, Shopify Flow fires an HTTP POST to HubSpot's Contacts API — no middleware, no manual export. Flow's <strong>Send HTTP Request</strong> action maps the form fields (business name, email, phone, company size) directly to HubSpot contact and deal properties. The sales team gets a new lead in their pipeline the moment the form is submitted, assigned and ready to work.</p>
+          <div style="background:#0c0c20; border:1px solid #1e1e4a; border-radius:8px; padding:16px 20px; margin:14px 0; font-family:monospace; font-size:11.5px; line-height:1.7; color:#a5b4fc;">
+            <div style="color:#6b7280; margin-bottom:8px; font-family:inherit; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;">Shopify Flow → Send HTTP Request</div>
+            <div><span style="color:#7dd3fc;">URL:</span> <span style="color:#e2e8f0;">https://api.hubapi.com/crm/v3/objects/contacts</span></div>
+            <div><span style="color:#7dd3fc;">Method:</span> <span style="color:#e2e8f0;">POST</span></div>
+            <div><span style="color:#7dd3fc;">Header:</span> <span style="color:#e2e8f0;">Authorization: Bearer {{hubspot_private_app_token}}</span></div>
+            <div style="margin-top:6px;"><span style="color:#7dd3fc;">Body:</span></div>
+            <div style="padding-left:16px; color:#e2e8f0;">{</div>
+            <div style="padding-left:32px; color:#e2e8f0;">"properties": {</div>
+            <div style="padding-left:48px;"><span style="color:#86efac;">"email"</span>: <span style="color:#fde68a;">"{{form.email}}"</span>,</div>
+            <div style="padding-left:48px;"><span style="color:#86efac;">"company"</span>: <span style="color:#fde68a;">"{{form.business_name}}"</span>,</div>
+            <div style="padding-left:48px;"><span style="color:#86efac;">"phone"</span>: <span style="color:#fde68a;">"{{form.phone}}"</span>,</div>
+            <div style="padding-left:48px;"><span style="color:#86efac;">"hs_lead_status"</span>: <span style="color:#fde68a;">"NEW"</span>,</div>
+            <div style="padding-left:48px;"><span style="color:#86efac;">"lead_source"</span>: <span style="color:#fde68a;">"REP Shopify B2B Form"</span></div>
+            <div style="padding-left:32px; color:#e2e8f0;">}</div>
+            <div style="padding-left:16px; color:#e2e8f0;">}</div>
+          </div>
+          <p style="margin-top:10px;">This creates a new Contact in HubSpot immediately. From there, a HubSpot workflow can automatically assign the lead to the right sales rep, create a Deal in the B2B pipeline, and send a Slack or email notification — all without anyone touching Shopify admin. REP's sales team works the lead in the system they already use.</p>
+          <div class="step-note p">Flow Trigger: Form Submitted → HTTP POST to HubSpot Contacts API → HubSpot Workflow: Assign Rep + Create Deal + Notify Team</div>
         </div>
       </div>
       <div class="step">
@@ -385,7 +402,7 @@
       <div class="card">
         <div class="card-tag card-tag-p">Shopify Flow</div>
         <h4>The Automation Layer</h4>
-        <p>Triggers on form submission to create company records, set approval status, assign catalogs, fire HubSpot events, and send buyer invite emails — all without manual steps from the sales team.</p>
+        <p>Triggers on form submission to create company records, set approval status, assign catalogs, and send buyer invite emails. Critically: the <strong>Send HTTP Request</strong> action fires a direct API call to HubSpot the moment a wholesale request comes in — no middleware, no manual data entry, no export. The lead lands in HubSpot before a rep could even open Shopify admin.</p>
       </div>
       <div class="card">
         <div class="card-tag card-tag-p">HubSpot Integration</div>
