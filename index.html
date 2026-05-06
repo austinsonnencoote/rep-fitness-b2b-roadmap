@@ -11,15 +11,17 @@
     body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d0d0d; color: #e8e8e8; font-size: 15px; line-height: 1.6; }
 
     /* NAV */
-    nav { position: sticky; top: 0; z-index: 100; background: #111; border-bottom: 1px solid #1e1e1e; padding: 0 40px; height: 58px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo { display: flex; align-items: center; gap: 14px; }
-    .nav-wordmark { font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
-    .nav-wordmark span { color: #008060; }
-    .nav-pill { font-size: 11px; background: #0d2018; color: #95BF47; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; border: 1px solid #1a3a20; }
-    .nav-links { display: flex; gap: 28px; }
-    .nav-links a { font-size: 12px; color: #555; text-decoration: none; font-weight: 500; letter-spacing: 0.3px; transition: color 0.2s; }
-    .nav-links a:hover { color: #95BF47; }
-    .nav-links a.active { color: #95BF47; border-bottom: 2px solid #95BF47; padding-bottom: 2px; }
+    nav { position: sticky; top: 0; z-index: 100; background: #111; border-bottom: 1px solid #1e1e1e; padding: 0 40px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo-pill { display: flex; align-items: center; gap: 8px; background: #ffffff; border-radius: 6px; padding: 4px 10px; }
+    .nav-logo-mark { width: 18px; height: 18px; background: #008060; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); flex-shrink: 0; }
+    .nav-logo-name { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #0d0d0d; text-transform: uppercase; }
+    .nav-logo-x { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
+    .nav-logo-x span { color: #95BF47; }
+    .nav-links { display: flex; align-items: center; gap: 6px; }
+    .nav-links a { font-size: 12px; color: #aaa; text-decoration: none; font-weight: 600; letter-spacing: 0.5px; transition: color 0.2s; padding: 6px 14px; border-radius: 5px; }
+    .nav-links a:hover { color: #fff; background: #1a1a1a; }
+    .nav-links a.active { color: #95BF47; background: #0d2018; border: 1px solid #1a3a20; }
 
     /* HERO */
     .hero { background: radial-gradient(ellipse at 15% 40%, rgba(0,128,96,0.18) 0%, transparent 55%), radial-gradient(ellipse at 85% 25%, rgba(149,191,71,0.08) 0%, transparent 50%), linear-gradient(135deg, #001a0e 0%, #0d0d0d 65%); padding: 80px 40px 64px; text-align: center; border-bottom: 1px solid #1a1a1a; }
@@ -137,36 +139,39 @@
 <body>
 
 <nav>
-  <div class="nav-logo">
-    <div class="nav-wordmark">REP Fitness <span>× Shopify B2B</span></div>
-    <div class="nav-pill">Implementation Roadmap</div>
-  </div>
+  <a href="#" class="nav-logo" onclick="showTab('uc1',null,document.getElementById('nav-uc1'));return false;" style="text-decoration:none;">
+    <div class="nav-logo-pill">
+      <div class="nav-logo-mark"></div>
+      <div class="nav-logo-name">REP FITNESS</div>
+    </div>
+    <div class="nav-logo-x">× <span>Shopify B2B</span></div>
+  </a>
   <div class="nav-links">
-    <a href="#" onclick="showTab('usecases','uc1',this);return false;" id="nav-uc1">01 · B2B Portal</a>
-    <a href="#" onclick="showTab('usecases','uc2',this);return false;" id="nav-uc2">02 · Commercial Sign-Up</a>
-    <a href="#" onclick="showTab('usecases','uc3',this);return false;" id="nav-uc3">03 · F45 Market</a>
+    <a href="#" onclick="showTab('uc1',null,this);return false;" id="nav-uc1" class="active">01 · US B2B Portal</a>
+    <a href="#" onclick="showTab('uc2',null,this);return false;" id="nav-uc2">02 · Commercial Sign-Up</a>
+    <a href="#" onclick="showTab('uc3',null,this);return false;" id="nav-uc3">03 · F45 Market</a>
     <a href="#" onclick="showTab('roadmap',null,this);return false;" id="nav-roadmap" style="color:#0d0d0d; background:#95BF47; padding:6px 14px; border-radius:5px; font-weight:800; letter-spacing:0.5px;">🚀 Launch Roadmap</a>
   </div>
 </nav>
 
 <div class="hero">
   <div class="hero-eyebrow">Post-Onsite · May 2025</div>
-  <h1>Three Use Cases.<br><span>One Platform.</span></h1>
-  <p class="hero-sub">Everything REP Fitness needs to launch B2B, vet commercial leads, and power the F45 channel — built once on Shopify, designed to scale to every geo from day one.</p>
+  <h1>REP Commercial Site.<br><span>Built to Scale.</span></h1>
+  <p class="hero-sub">Launching with US B2B — then a repeatable framework to roll out across markets and regions without starting from scratch. Every use case below is V1 of a platform that grows with REP Fitness.</p>
   <div class="use-case-pills">
-    <a href="#uc1" class="uc-pill uc-pill-1">01 · Self-Serve Reorder Portal</a>
-    <a href="#uc2" class="uc-pill uc-pill-2">02 · Commercial Sign-Up Flow</a>
-    <a href="#uc3" class="uc-pill uc-pill-3">03 · F45 Branded Market</a>
+    <a href="#" onclick="showTab('uc1',null,document.getElementById('nav-uc1'));return false;" class="uc-pill uc-pill-1">01 · US B2B Portal</a>
+    <a href="#" onclick="showTab('uc2',null,document.getElementById('nav-uc2'));return false;" class="uc-pill uc-pill-2">02 · Commercial Sign-Up</a>
+    <a href="#" onclick="showTab('uc3',null,document.getElementById('nav-uc3'));return false;" class="uc-pill uc-pill-3">03 · F45 Market</a>
   </div>
 </div>
 
-<div id="view-usecases" class="page">
+<div id="view-uc1" class="page" style="display:block;">
 
   <!-- ============================
        USE CASE 1: B2B PORTAL
   ============================= -->
   <div class="uc-section" id="uc1">
-    <div class="uc-tag uc-tag-1">Use Case 01</div>
+    <div class="uc-tag uc-tag-1">Use Case 01 — US B2B Portal</div>
     <div class="uc-title">Self-Serve <span class="g">Reorder Portal</span></div>
     <p class="uc-subtitle">Start with US. Build it so UK and EU are a configuration, not a rebuild. Existing B2B customers log in, browse by collection, and place orders without touching a rep — and the same infrastructure powers every market you add after.</p>
 
@@ -302,6 +307,9 @@
   </div>
 
 
+</div><!-- /view-uc1 -->
+
+<div id="view-uc2" class="page" style="display:none;">
   <!-- ============================
        USE CASE 2: SIGN-UP FLOW
   ============================= -->
@@ -425,6 +433,9 @@
   </div>
 
 
+</div><!-- /view-uc2 -->
+
+<div id="view-uc3" class="page" style="display:none;">
   <!-- ============================
        USE CASE 3: F45 MARKET
   ============================= -->
@@ -557,7 +568,7 @@
   </div>
 
 
-</div><!-- /view-usecases -->
+</div><!-- /view-uc3 -->
 
 <div id="view-roadmap" style="display:none;">
 <div class="page">
@@ -885,25 +896,24 @@
 
 <script>
   function showTab(tab, anchor, el) {
-    var uc = document.getElementById('view-usecases');
-    var rm = document.getElementById('view-roadmap');
+    var views = ['view-uc1','view-uc2','view-uc3','view-roadmap'];
     var hero = document.querySelector('.hero');
     document.querySelectorAll('.nav-links a').forEach(function(a){ a.classList.remove('active'); });
     if (el) el.classList.add('active');
+    views.forEach(function(id){
+      var v = document.getElementById(id);
+      if (v) v.style.display = 'none';
+    });
     if (tab === 'roadmap') {
-      uc.style.display = 'none';
-      rm.style.display = 'block';
+      document.getElementById('view-roadmap').style.display = 'block';
       if (hero) hero.style.display = 'none';
-      window.scrollTo(0,0);
     } else {
-      uc.style.display = 'block';
-      rm.style.display = 'none';
+      var viewId = 'view-' + tab;
+      var v = document.getElementById(viewId);
+      if (v) v.style.display = 'block';
       if (hero) hero.style.display = 'block';
-      if (anchor) {
-        var el2 = document.getElementById(anchor);
-        if (el2) setTimeout(function(){ el2.scrollIntoView({behavior:'smooth'}); }, 50);
-      }
     }
+    window.scrollTo(0,0);
   }
 </script>
 </body>
