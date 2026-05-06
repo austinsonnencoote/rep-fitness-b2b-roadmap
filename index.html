@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REP Fitness — Shopify B2B Implementation Roadmap</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d0d0d; color: #e8e8e8; font-size: 15px; line-height: 1.6; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: #111; border-bottom: 1px solid #1e1e1e; padding: 0 40px; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 14px; }
+    .nav-wordmark { font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
+    .nav-wordmark span { color: #008060; }
+    .nav-pill { font-size: 11px; background: #0d2018; color: #95BF47; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; border: 1px solid #1a3a20; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { font-size: 12px; color: #555; text-decoration: none; font-weight: 500; letter-spacing: 0.3px; transition: color 0.2s; }
+    .nav-links a:hover { color: #95BF47; }
+
+    /* HERO */
+    .hero { background: radial-gradient(ellipse at 15% 40%, rgba(0,128,96,0.18) 0%, transparent 55%), radial-gradient(ellipse at 85% 25%, rgba(149,191,71,0.08) 0%, transparent 50%), linear-gradient(135deg, #001a0e 0%, #0d0d0d 65%); padding: 80px 40px 64px; text-align: center; border-bottom: 1px solid #1a1a1a; }
+    .hero-eyebrow { font-size: 11px; color: #008060; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin-bottom: 18px; }
+    .hero h1 { font-size: 44px; font-weight: 900; color: #fff; letter-spacing: -1px; line-height: 1.1; margin-bottom: 18px; }
+    .hero h1 span { color: #95BF47; }
+    .hero-sub { font-size: 16px; color: #666; max-width: 620px; margin: 0 auto 40px; line-height: 1.75; }
+    .use-case-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .uc-pill { font-size: 12px; font-weight: 600; padding: 8px 18px; border-radius: 24px; border: 1px solid; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .uc-pill-1 { background: rgba(0,128,96,0.12); color: #95BF47; border-color: rgba(0,128,96,0.3); }
+    .uc-pill-1:hover { background: rgba(0,128,96,0.25); }
+    .uc-pill-2 { background: rgba(99,102,241,0.1); color: #a5b4fc; border-color: rgba(99,102,241,0.25); }
+    .uc-pill-2:hover { background: rgba(99,102,241,0.2); }
+    .uc-pill-3 { background: rgba(245,158,11,0.1); color: #fcd34d; border-color: rgba(245,158,11,0.25); }
+    .uc-pill-3:hover { background: rgba(245,158,11,0.2); }
+
+    /* LAYOUT */
+    .page { max-width: 1080px; margin: 0 auto; padding: 0 40px 80px; }
+
+    /* SECTION */
+    .uc-section { padding: 64px 0 0; }
+    .uc-section + .uc-section { border-top: 1px solid #1a1a1a; margin-top: 64px; }
+
+    /* SECTION HEADER */
+    .uc-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 4px; margin-bottom: 14px; }
+    .uc-tag-1 { background: #0d2018; color: #95BF47; border: 1px solid #1a3a20; }
+    .uc-tag-2 { background: #0c0c2a; color: #a5b4fc; border: 1px solid #1e1e4a; }
+    .uc-tag-3 { background: #1a1200; color: #fcd34d; border: 1px solid #3a2800; }
+    .uc-title { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 10px; }
+    .uc-title span.g { color: #95BF47; }
+    .uc-title span.p { color: #a5b4fc; }
+    .uc-title span.y { color: #fcd34d; }
+    .uc-subtitle { font-size: 14px; color: #666; max-width: 760px; line-height: 1.7; margin-bottom: 32px; }
+
+    /* GOAL BAR */
+    .goal-bar { background: #0d1a12; border: 1px solid #1a3a20; border-left: 3px solid #008060; border-radius: 0 6px 6px 0; padding: 18px 22px; margin-bottom: 28px; }
+    .goal-bar-2 { background: #0c0c20; border-color: #1e1e4a; border-left-color: #6366f1; }
+    .goal-bar-3 { background: #1a1200; border-color: #3a2800; border-left-color: #f59e0b; }
+    .goal-bar .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #008060; margin-bottom: 6px; }
+    .goal-bar-2 .label { color: #6366f1; }
+    .goal-bar-3 .label { color: #f59e0b; }
+    .goal-bar p { font-size: 13px; color: #aaa; line-height: 1.7; }
+    .goal-bar strong { color: #fff; }
+
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+
+    /* CARDS */
+    .card { background: #141414; border: 1px solid #1e1e1e; border-radius: 8px; padding: 20px; }
+    .card h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .card p { font-size: 12px; color: #777; line-height: 1.65; }
+    .card .card-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: inline-block; padding: 2px 8px; border-radius: 3px; }
+    .card-tag-g { background: #0d2018; color: #95BF47; }
+    .card-tag-p { background: #0c0c2a; color: #a5b4fc; }
+    .card-tag-y { background: #1a1200; color: #fcd34d; }
+    .card-tag-r { background: #1a0a0a; color: #f87171; }
+    .card ul { margin-top: 8px; padding-left: 16px; }
+    .card ul li { font-size: 12px; color: #777; line-height: 1.7; }
+    .card ul li + li { margin-top: 2px; }
+    .card .metric { font-size: 28px; font-weight: 800; color: #95BF47; line-height: 1; margin-bottom: 6px; }
+    .card .metric.p { color: #a5b4fc; }
+    .card .metric.y { color: #fcd34d; }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 20px; }
+    .step { display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid #181818; }
+    .step:last-child { border-bottom: none; }
+    .step-num { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; margin-top: 2px; }
+    .step-num-g { background: #0d2018; color: #95BF47; border: 1px solid #1a4a25; }
+    .step-num-p { background: #0c0c2a; color: #a5b4fc; border: 1px solid #2a2a5a; }
+    .step-num-y { background: #1a1200; color: #fcd34d; border: 1px solid #3a2800; }
+    .step-body h5 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .step-body p { font-size: 12px; color: #777; line-height: 1.65; }
+    .step-body .step-note { font-size: 11px; color: #95BF47; font-weight: 600; margin-top: 5px; }
+    .step-body .step-note.p { color: #a5b4fc; }
+    .step-body .step-note.y { color: #fcd34d; }
+
+    /* RESOURCES */
+    .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .resource-card { background: #111; border: 1px solid #1a1a1a; border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+    .resource-card:hover { background: #161616; border-color: #2a2a2a; }
+    .resource-card .rc-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .rc-type-g { color: #008060; }
+    .rc-type-p { color: #6366f1; }
+    .rc-type-y { color: #f59e0b; }
+    .resource-card .rc-title { font-size: 12px; font-weight: 600; color: #ccc; line-height: 1.4; }
+    .resource-card .rc-desc { font-size: 11px; color: #555; line-height: 1.5; }
+    .resource-card .rc-arrow { font-size: 11px; color: #333; margin-top: auto; }
+
+    /* SCALE CALLOUT */
+    .scale-box { background: linear-gradient(145deg, #0f2018 0%, #090e0c 100%); border: 1px solid #1a3a20; border-radius: 8px; padding: 24px 28px; margin-bottom: 20px; }
+    .scale-box-p { background: linear-gradient(145deg, #0c0c20 0%, #080810 100%); border-color: #1e1e4a; }
+    .scale-box-y { background: linear-gradient(145deg, #1a1200 0%, #0e0900 100%); border-color: #3a2800; }
+    .scale-box .sb-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #008060; margin-bottom: 10px; }
+    .scale-box-p .sb-label { color: #6366f1; }
+    .scale-box-y .sb-label { color: #f59e0b; }
+    .scale-box h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .scale-box p { font-size: 13px; color: #888; line-height: 1.7; }
+    .scale-box .sb-steps { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .sb-step { background: rgba(0,128,96,0.1); border: 1px solid rgba(0,128,96,0.2); border-radius: 4px; padding: 8px 14px; font-size: 11px; color: #95BF47; font-weight: 600; }
+    .sb-step.p { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2); color: #a5b4fc; }
+    .sb-step.y { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.2); color: #fcd34d; }
+
+    /* DIVIDER */
+    .section-divider { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #2a2a2a; margin: 28px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #1a1a1a; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid #1a1a1a; padding: 32px 40px; text-align: center; }
+    footer p { font-size: 11px; color: #333; }
+    footer a { color: #555; text-decoration: none; }
+    footer a:hover { color: #95BF47; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-wordmark">REP Fitness <span>× Shopify B2B</span></div>
+    <div class="nav-pill">Implementation Roadmap</div>
+  </div>
+  <div class="nav-links">
+    <a href="#uc1">01 · B2B Portal</a>
+    <a href="#uc2">02 · Commercial Sign-Up</a>
+    <a href="#uc3">03 · F45 Market</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Post-Onsite · May 2025</div>
+  <h1>Three Use Cases.<br><span>One Platform.</span></h1>
+  <p class="hero-sub">Everything REP Fitness needs to launch B2B, vet commercial leads, and power the F45 channel — built once on Shopify, designed to scale to every geo from day one.</p>
+  <div class="use-case-pills">
+    <a href="#uc1" class="uc-pill uc-pill-1">01 · Self-Serve Reorder Portal</a>
+    <a href="#uc2" class="uc-pill uc-pill-2">02 · Commercial Sign-Up Flow</a>
+    <a href="#uc3" class="uc-pill uc-pill-3">03 · F45 Branded Market</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ============================
+       USE CASE 1: B2B PORTAL
+  ============================= -->
+  <div class="uc-section" id="uc1">
+    <div class="uc-tag uc-tag-1">Use Case 01</div>
+    <div class="uc-title">Self-Serve <span class="g">Reorder Portal</span></div>
+    <p class="uc-subtitle">Start with US. Build it so UK and EU are a configuration, not a rebuild. Existing B2B customers log in, browse by collection, and place orders without touching a rep — and the same infrastructure powers every market you add after.</p>
+
+    <div class="goal-bar">
+      <div class="label">The Goal</div>
+      <p>Give existing commercial customers a front-end portal where they can <strong>browse products by collection</strong> (weights, cardio, benches, etc.), see their <strong>pre-negotiated B2B pricing</strong>, and <strong>reorder without a rep involved</strong>. V1 launches in the US. The architecture is set up from day one so adding UK and EU markets is additive — not a rebuild.</p>
+    </div>
+
+    <div class="section-divider">How to Build It</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num step-num-g">1</div>
+        <div class="step-body">
+          <h5>Enable B2B and Create Your US Market</h5>
+          <p>In Shopify Admin, activate B2B under Settings → Customer accounts. Create a US Market in Markets — this becomes the container for your US B2B catalog, currency, tax rules, and domain. Every future geo (UK, EU, CA) gets its own Market added on top of this same foundation.</p>
+          <div class="step-note">Markets → Add Market → United States · Currency: USD · Domain: repfitness.com/en-us</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-g">2</div>
+        <div class="step-body">
+          <h5>Build Your US B2B Catalog and Price Lists</h5>
+          <p>Create a B2B-specific catalog in the Shopify admin — separate from DTC. Assign the catalog to the US Market. Set up price lists within the catalog: fixed B2B pricing or % off retail per product or collection. B2B pricing only surfaces on login — DTC visitors always see DTC pricing.</p>
+          <div class="step-note">Catalogs → Create Catalog → Assign to US Market → Add Price List → Scope to collections (Weights, Cardio, Benches)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-g">3</div>
+        <div class="step-body">
+          <h5>Create Companies and Assign to US Market</h5>
+          <p>Each existing commercial account becomes a Company in Shopify. The Company record holds: contacts, locations, assigned catalog, payment terms, and order history. Companies are scoped to the US Market — when you add a UK Market later, UK companies go there. No overlap, no manual filtering.</p>
+          <div class="step-note">B2B → Companies → New Company → Assign Catalog + US Market → Add Contacts + Locations</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-g">4</div>
+        <div class="step-body">
+          <h5>Set Up B2B Shipping Rules (Different from DTC)</h5>
+          <p>B2B shipping profiles can be completely separate from DTC. Create a dedicated shipping profile for B2B orders: different carrier rates, freight options for large orders, and Net terms-compatible shipping. Assign the profile to your B2B catalog — DTC shipping is untouched.</p>
+          <div class="step-note">Settings → Shipping → Create Profile → Assign to B2B Catalog → Set freight/LTL options for commercial orders</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-g">5</div>
+        <div class="step-body">
+          <h5>Configure Net Payment Terms</h5>
+          <p>Assign Net 30 (or Net 60) terms at the Company level — each account gets the terms you negotiated. When a B2B customer checks out, the order is placed with a due date automatically set. Shopify Flow handles reminders and auto-charge when the date hits — no manual AR chasing.</p>
+          <div class="step-note">Company record → Payment Terms → Net 30 / Net 60 → Shopify Flow: auto-charge trigger on due date</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-g">6</div>
+        <div class="step-body">
+          <h5>Build the Front End — Collections Browse + Quick Buy</h5>
+          <p>Your theme controls the B2B portal experience. Enable collection-based browsing so commercial buyers can navigate by product type. Add a Quick Buy / Quick Order component so frequent buyers can drop quantities directly from the collection page without clicking into each PDP. V1 can use an off-the-shelf theme component — no custom dev required.</p>
+          <div class="step-note">Theme editor → B2B Customer Account portal → Enable Collections nav → Add Quick Order List section (available in most Plus themes)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scale-box" style="margin-bottom:20px;">
+      <div class="sb-label">Scaling to UK + EU — The Markets Playbook</div>
+      <h4>You build the infrastructure once. Every new geo is a configuration layer on top.</h4>
+      <p>When REP is ready to open the B2B portal to UK buyers: add a UK Market, create a UK-specific price list (GBP), assign a UK catalog (same products, different pricing/VAT handling), and assign UK companies to that market. The portal front end, checkout logic, and order management are already built — you're just extending to a new lane, not rebuilding the road.</p>
+      <div class="sb-steps">
+        <div class="sb-step">Add UK Market → GBP currency</div>
+        <div class="sb-step">Duplicate US catalog → Adjust UK pricing</div>
+        <div class="sb-step">Shopify Markets: VAT auto-applied</div>
+        <div class="sb-step">New UK companies → Assigned to UK Market</div>
+        <div class="sb-step">Same theme, same portal UX</div>
+      </div>
+    </div>
+
+    <div class="section-divider">Key Features Involved</div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-tag card-tag-g">B2B Catalogs</div>
+        <h4>Scoped Product & Pricing Visibility</h4>
+        <p>Each catalog controls which products a company sees and at what price. DTC visitors never see B2B pricing. Multiple catalogs can run simultaneously — US commercial, UK commercial, F45, each with different terms.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag card-tag-g">Shopify Markets</div>
+        <h4>One Store, Multiple Geos</h4>
+        <p>Markets controls currency, language, domain, tax rules, and which catalog applies — per geography. Adding a new country is additive. No separate Shopify store, no duplicated theme work, no split admin.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag card-tag-g">Net Payment Terms</div>
+        <h4>AR Built Into the Order Flow</h4>
+        <p>Net 30/60 set per company. Due dates attached to every order automatically. Shopify Flow handles dunning reminders and auto-charge — eliminating the manual AR chase and the unmatched ACH wire problem.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">Resources</div>
+    <div class="resources-grid">
+      <a href="https://help.shopify.com/en/manual/b2b" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-g">Shopify Help</div>
+        <div class="rc-title">B2B Overview — Getting Started</div>
+        <div class="rc-desc">Full guide to enabling B2B, companies, catalogs, and the buyer portal.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/catalogs" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-g">Shopify Help</div>
+        <div class="rc-title">B2B Catalogs and Price Lists</div>
+        <div class="rc-desc">How to create, scope, and assign catalogs per company and market.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/markets" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-g">Shopify Help</div>
+        <div class="rc-title">Shopify Markets — Setup Guide</div>
+        <div class="rc-desc">Creating markets, assigning currencies, domains, and tax settings per geo.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/payment-terms" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-g">Shopify Help</div>
+        <div class="rc-title">B2B Payment Terms</div>
+        <div class="rc-desc">Configuring Net 30/60 per company, due dates, and reminders.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/shipping-profiles" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-g">Shopify Help</div>
+        <div class="rc-title">Custom Shipping Profiles</div>
+        <div class="rc-desc">Create separate shipping rules for B2B vs. DTC — freight rates, carrier options, profile scoping.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/companies" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-g">Shopify Help</div>
+        <div class="rc-title">Managing Companies</div>
+        <div class="rc-desc">Setting up company records, assigning contacts, locations, catalogs, and payment terms.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ============================
+       USE CASE 2: SIGN-UP FLOW
+  ============================= -->
+  <div class="uc-section" id="uc2">
+    <div class="uc-tag uc-tag-2">Use Case 02</div>
+    <div class="uc-title">Commercial <span class="p">Sign-Up Flow</span></div>
+    <p class="uc-subtitle">A purpose-built application form for commercial buyers — collected via Shopify Forms, automatically creating an unapproved company record, and notifying the sales team in HubSpot so they can vet and activate accounts without any manual data entry.</p>
+
+    <div class="goal-bar goal-bar-2">
+      <div class="label">The Goal</div>
+      <p>Commercial buyers who want a B2B account submit a form on repfitness.com. That form <strong>automatically creates a Company record in Shopify</strong> with their details, set to unapproved. The sales team sees the lead in <strong>HubSpot</strong> and either activates or declines. Once approved, the buyer gets access to the portal — no rep data entry, no email threads.</p>
+    </div>
+
+    <div class="section-divider">How to Build It</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num step-num-p">1</div>
+        <div class="step-body">
+          <h5>Build the Application Form with Shopify Forms</h5>
+          <p>Install the Shopify Forms app (free, native). Build a custom form collecting: business name, contact name, email, phone, business type (gym, corporate, institutional), number of locations, and any commercial-specific fields REP needs (e.g., reseller cert, EIN). Embed it on a dedicated /wholesale or /commercial page.</p>
+          <div class="step-note p">Shopify Forms → Create Form → Custom fields → Embed on /commercial page</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-p">2</div>
+        <div class="step-body">
+          <h5>Auto-Create the Company Record on Submission</h5>
+          <p>Use Shopify Flow to trigger on form submission: create a Company record in B2B with the submitted details, set status to Unapproved, and tag it with source (e.g., "Web Application"). The company exists in the system immediately — the sales team doesn't need to create it manually when they go to approve.</p>
+          <div class="step-note p">Shopify Flow → Trigger: Form Submitted → Action: Create Company (status: Unapproved) → Tag: Web-Application</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-p">3</div>
+        <div class="step-body">
+          <h5>Push the Lead to HubSpot</h5>
+          <p>The HubSpot for Shopify integration syncs customer and company data bidirectionally. When a new unapproved company is created via Flow, a contact and deal can be created automatically in HubSpot — so the sales team's notification and pipeline management lives where they already work, not in Shopify admin.</p>
+          <div class="step-note p">HubSpot Shopify Integration → Map Company fields → Auto-create Contact + Deal → Trigger sales team notification</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-p">4</div>
+        <div class="step-body">
+          <h5>Sales Team Vets and Activates</h5>
+          <p>The rep clicks into HubSpot, reviews the lead, and either activates the company (changing status to Approved in Shopify, assigning catalog and payment terms) or declines. Once approved, the buyer receives an invitation email to set up their account and access the portal — the whole flow is automated from form submission to active account.</p>
+          <div class="step-note p">Shopify Admin → B2B → Companies → Approve → Assign Catalog + Terms → Auto-send invite email</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scale-box scale-box-p" style="margin-bottom:20px;">
+      <div class="sb-label">Scaling This to New Geos</div>
+      <h4>Add a market-specific version of the form — same flow, different routing.</h4>
+      <p>When the UK portal launches, create a /commercial-uk form variant collecting GBP and UK-specific business details. Flow routes UK submissions to UK company records (assigned to the UK Market). HubSpot gets the same notification — the sales team handles UK leads exactly as they handle US ones. No new tooling, no new processes.</p>
+      <div class="sb-steps">
+        <div class="sb-step p">Duplicate form → UK version</div>
+        <div class="sb-step p">Flow routes to UK Market companies</div>
+        <div class="sb-step p">Same HubSpot pipeline</div>
+        <div class="sb-step p">UK catalog auto-assigned on approval</div>
+      </div>
+    </div>
+
+    <div class="section-divider">Key Features Involved</div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-tag card-tag-p">Shopify Forms</div>
+        <h4>Native, No-Code Form Builder</h4>
+        <p>Free app, native to Shopify. Builds fully customizable forms that embed anywhere on the storefront. Submissions feed directly into Shopify Flow for automation — no third-party form tool needed.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag card-tag-p">Shopify Flow</div>
+        <h4>The Automation Layer</h4>
+        <p>Triggers on form submission to create company records, set approval status, assign catalogs, fire HubSpot events, and send buyer invite emails — all without manual steps from the sales team.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag card-tag-p">HubSpot Integration</div>
+        <h4>Leads Where the Team Already Works</h4>
+        <p>The native HubSpot + Shopify integration syncs company and customer data bidirectionally. New B2B applications surface in HubSpot as deals — with all form fields mapped to the contact record.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">Resources</div>
+    <div class="resources-grid">
+      <a href="https://apps.shopify.com/shopify-forms" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-p">App Store</div>
+        <div class="rc-title">Shopify Forms App</div>
+        <div class="rc-desc">Install and configure the native Shopify Forms app for custom commercial applications.</div>
+        <div class="rc-arrow">↗ apps.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/shopify-flow" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-p">Shopify Help</div>
+        <div class="rc-title">Shopify Flow — Automation Guide</div>
+        <div class="rc-desc">Build triggers and actions for form submissions, company creation, and status management.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://apps.shopify.com/hubspot" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-p">App Store</div>
+        <div class="rc-title">HubSpot for Shopify</div>
+        <div class="rc-desc">Native bidirectional sync between Shopify companies/customers and HubSpot contacts/deals.</div>
+        <div class="rc-arrow">↗ apps.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/companies/manage-companies" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-p">Shopify Help</div>
+        <div class="rc-title">Company Approval Workflow</div>
+        <div class="rc-desc">How to manage company status, move from unapproved to active, and send buyer invitations.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/customer-accounts" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-p">Shopify Help</div>
+        <div class="rc-title">B2B Customer Accounts</div>
+        <div class="rc-desc">How buyer login, account invitations, and self-serve portal access works end-to-end.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/shopify-flow/reference/triggers" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-p">Shopify Help</div>
+        <div class="rc-title">Flow Triggers Reference</div>
+        <div class="rc-desc">All available Flow triggers including form submission, company creation, and status changes.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ============================
+       USE CASE 3: F45 MARKET
+  ============================= -->
+  <div class="uc-section" id="uc3">
+    <div class="uc-tag uc-tag-3">Use Case 03</div>
+    <div class="uc-title">F45 <span class="y">Branded Market</span></div>
+    <p class="uc-subtitle">A fully branded F45 purchasing experience — living inside REP's Shopify store — where F45 franchise owners land from F45.com, see only the F45-approved catalog at F45-negotiated pricing, and check out while REP owns every part of the transaction.</p>
+
+    <div class="goal-bar goal-bar-3">
+      <div class="label">The Goal</div>
+      <p>Create a <strong>dedicated F45 market</strong> within REP's Shopify store — custom front end, F45 branding, F45-specific catalog and pricing. F45.com links franchise owners directly to the REP portal. <strong>REP owns the entire transaction</strong>: customer data, shipping, pricing, products, and checkout. F45 gets a seamless branded experience without needing to build or manage a store.</p>
+    </div>
+
+    <div class="section-divider">How to Build It</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num step-num-y">1</div>
+        <div class="step-body">
+          <h5>Create the F45 Market in Shopify Markets</h5>
+          <p>In Shopify Markets, create a dedicated F45 market. Assign it its own subdomain or subdirectory (e.g., f45.repfitness.com or repfitness.com/f45). This market controls what products are visible, what currency applies, and what the storefront looks like — completely isolated from the standard DTC and commercial US experiences.</p>
+          <div class="step-note y">Markets → Add Market → Name: F45 → Domain: f45.repfitness.com · Currency: USD</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-y">2</div>
+        <div class="step-body">
+          <h5>Build the F45 Catalog and Price List</h5>
+          <p>Create an F45-specific B2B catalog: only the products F45 franchise owners are eligible to purchase, at the negotiated F45 pricing tier. F45 buyers logging in will never see general commercial pricing or DTC pricing — only their catalog. Minimum order quantities, approved SKUs, and bulk pricing tiers all set within this catalog.</p>
+          <div class="step-note y">B2B → Catalogs → F45 Catalog → Assign F45 Price List → Scope to approved SKUs only</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-y">3</div>
+        <div class="step-body">
+          <h5>Customize the Storefront for F45 Branding</h5>
+          <p>Use Shopify's theme customization to apply F45 branding to the market-specific experience — logo, colors, banner imagery, collection naming. Shopify Markets allows market-specific content sections within the same theme, so F45 buyers see an F45-branded portal while US commercial buyers see the standard REP experience — same store, no separate theme.</p>
+          <div class="step-note y">Theme Editor → Market-specific content blocks → F45 logo, brand colors, curated homepage sections</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-y">4</div>
+        <div class="step-body">
+          <h5>Set Up F45 Companies and Accounts</h5>
+          <p>Each F45 franchise location becomes a Company (or sub-location under a master F45 account). Assign all F45 companies to the F45 market and the F45 catalog. F45 corporate can see consolidated spend across all franchisees; each location manages its own orders independently. Payment terms set per franchise or at master account level.</p>
+          <div class="step-note y">B2B → Companies → F45 Master Account → Locations per franchise → All assigned to F45 Market + Catalog</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num step-num-y">5</div>
+        <div class="step-body">
+          <h5>Link from F45.com — REP Owns the Transaction</h5>
+          <p>F45 adds a simple "Order Equipment" link on their franchisee portal or partner page pointing to f45.repfitness.com. F45 owners land on the branded REP portal, log in (or request access), and place orders. REP controls the entire transaction: payment processing, shipping, customer data, order confirmation, and fulfillment. F45 gets a seamless experience without any commerce infrastructure of their own.</p>
+          <div class="step-note y">F45.com → Link to f45.repfitness.com → B2B login → F45 catalog → REP checkout + fulfillment</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scale-box scale-box-y" style="margin-bottom:20px;">
+      <div class="sb-label">Why This Model Works for Other Brand Partners Too</div>
+      <h4>The F45 market is a template. Every new brand partner is a new market configuration.</h4>
+      <p>Once the F45 market is live, REP has a repeatable pattern for any future branded channel partnership. Another franchise brand, a corporate wellness partner, or an institutional buyer group gets their own market: branded experience, scoped catalog, dedicated pricing, and a link from their site into REP's portal. One store running unlimited partner channels — REP owns every transaction.</p>
+      <div class="sb-steps">
+        <div class="sb-step y">Duplicate F45 market config</div>
+        <div class="sb-step y">New catalog + pricing tier</div>
+        <div class="sb-step y">Partner branding applied</div>
+        <div class="sb-step y">Partner links to REP portal</div>
+        <div class="sb-step y">REP owns the transaction</div>
+      </div>
+    </div>
+
+    <div class="section-divider">Key Features Involved</div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-tag card-tag-y">Shopify Markets</div>
+        <h4>Isolated Partner Channel Within One Store</h4>
+        <p>Markets creates a fully scoped experience — custom domain, custom content, market-specific catalog — without a separate Shopify store. F45 buyers see F45. US commercial buyers see REP commercial. Both in the same admin.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag card-tag-y">Company Hierarchies</div>
+        <h4>HQ Visibility, Location-Level Ordering</h4>
+        <p>F45 corporate gets a master account with consolidated reporting. Each franchise location orders independently under that account. HQ can see total spend across the network without managing every transaction.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag card-tag-y">Market-Specific Content</div>
+        <h4>F45 Branding Without a Separate Theme</h4>
+        <p>Shopify Markets supports market-specific content blocks in the theme editor — logo, colors, banners, featured collections. F45 owners see F45 branding. The theme is still one codebase, one admin.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">Resources</div>
+    <div class="resources-grid">
+      <a href="https://help.shopify.com/en/manual/markets" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-y">Shopify Help</div>
+        <div class="rc-title">Shopify Markets Overview</div>
+        <div class="rc-desc">Full guide to creating markets, assigning domains, currencies, and content variations.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/catalogs" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-y">Shopify Help</div>
+        <div class="rc-title">B2B Catalogs — Partner-Specific</div>
+        <div class="rc-desc">How to scope a catalog to specific companies and markets for partner channel use cases.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/companies" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-y">Shopify Help</div>
+        <div class="rc-title">Company Hierarchies</div>
+        <div class="rc-desc">Setting up master accounts with sub-locations — ideal for franchise network structure.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/markets/market-specific-settings" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-y">Shopify Help</div>
+        <div class="rc-title">Market-Specific Storefront Content</div>
+        <div class="rc-desc">Customizing theme content per market — logos, banners, featured collections, and language.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/markets/domains" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-y">Shopify Help</div>
+        <div class="rc-title">Custom Domains per Market</div>
+        <div class="rc-desc">Assigning f45.repfitness.com (or subdirectory) to the F45 market for the direct link from F45.com.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+      <a href="https://help.shopify.com/en/manual/b2b/payment-terms" target="_blank" class="resource-card">
+        <div class="rc-type rc-type-y">Shopify Help</div>
+        <div class="rc-title">Payment Terms per Company</div>
+        <div class="rc-desc">Set F45-specific payment terms at the master account level — applied across all franchise locations.</div>
+        <div class="rc-arrow">↗ help.shopify.com</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Prepared by <a href="mailto:austin.sonnencoote@shopify.com">Austin Sonnen-Coote</a> · Shopify B2B · Confidential · <a href="https://austinsonnencoote.github.io/repfitness-b2b-shopify/" target="_blank">View Business Case Deck ↗</a></p>
+</footer>
+
+</body>
+</html>
