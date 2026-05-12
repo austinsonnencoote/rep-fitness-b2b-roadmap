@@ -950,6 +950,29 @@
 
   // ── ROADMAP STATUS TRACKING ──────────────────────────────────────────────
 
+  // Slack notification webhook (Workflow Builder webhook trigger → DM Austin).
+  // Leave empty string to disable notifications. The page works either way.
+  var SLACK_WEBHOOK_URL = '';
+
+  function notifySlack(taskName, newStatus) {
+    if (!SLACK_WEBHOOK_URL) return;
+    if (newStatus === 'open') return; // only notify on Progress/Done, not on un-toggle
+    var label = newStatus === 'done' ? '✅ Done' : '⟳ In Progress';
+    var payload = {
+      task: taskName,
+      status: label,
+      text: '*REP Fitness B2B Roadmap* — ' + label + ': _' + taskName + '_'
+    };
+    try {
+      fetch(SLACK_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) { /* silent — never block UI */ }
+  }
+
   var _roadmapRows = null;
 
   function getRoadmapRows() {
@@ -1001,9 +1024,11 @@
     if (!row) return;
     var taskId = row.getAttribute('data-task-id');
     var cur = getStatus(taskId);
-    localStorage.setItem('rep-b2b-' + taskId, cur === newStatus ? 'open' : newStatus);
+    var finalStatus = cur === newStatus ? 'open' : newStatus;
+    localStorage.setItem('rep-b2b-' + taskId, finalStatus);
     renderRow(row, taskId);
     updateStatusSummary();
+    notifySlack(getTaskName(row), finalStatus);
   }
 
   function initRoadmapStatuses() {
