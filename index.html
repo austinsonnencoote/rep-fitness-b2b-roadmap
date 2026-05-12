@@ -134,6 +134,18 @@
     footer p { font-size: 11px; color: #333; }
     footer a { color: #555; text-decoration: none; }
     footer a:hover { color: #95BF47; }
+
+    /* TASK STATUS BUTTONS */
+    .ts-cell { display: flex; flex-direction: column; gap: 4px; }
+    .ts-btn { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #2a2a2a; cursor: pointer; background: transparent; color: #3a3a3a; white-space: nowrap; line-height: 1.5; transition: all 0.15s; width: 100%; text-align: center; }
+    .ts-btn:hover { border-color: #555; color: #777; }
+    .ts-on-prog { color: #d97706 !important; border-color: rgba(217,119,6,0.6) !important; background: rgba(217,119,6,0.08) !important; }
+    .ts-on-done { color: #95BF47 !important; border-color: rgba(149,191,71,0.6) !important; background: rgba(149,191,71,0.08) !important; }
+    [data-status="done"] > div:nth-child(3) > div:first-child { text-decoration: line-through; opacity: 0.5; }
+    .slack-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 10px; }
+    .copy-slack-btn { cursor: pointer; background: #111; border: 1px solid rgba(149,191,71,0.35); border-radius: 6px; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #95BF47; transition: all 0.2s; letter-spacing: 0.3px; }
+    .copy-slack-btn:hover { background: #0d2018; border-color: rgba(149,191,71,0.7); }
+    .slack-bar-label { font-size: 11px; color: #444; }
   </style>
 </head>
 <body>
@@ -636,6 +648,12 @@
       </div>
     </div>
 
+    <!-- STATUS BAR -->
+    <div class="slack-bar">
+      <span class="slack-bar-label" id="status-summary">Track progress below — changes save automatically.</span>
+      <button class="copy-slack-btn" id="copy-slack-btn" onclick="copySlackUpdate()">📋 Copy Slack Update</button>
+    </div>
+
     <!-- COLUMN HEADERS -->
     <div style="display:grid; grid-template-columns:110px 20px 1fr 200px 110px; gap:8px; padding:0 12px 10px 36px; border-bottom:1px solid #1a1a1a; margin-bottom:8px;">
       <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#444;">Date</div>
@@ -920,6 +938,7 @@
     if (tab === 'roadmap') {
       document.getElementById('view-roadmap').style.display = 'block';
       if (hero) hero.style.display = 'none';
+      initRoadmapStatuses();
     } else {
       var viewId = 'view-' + tab;
       var v = document.getElementById(viewId);
@@ -928,6 +947,153 @@
     }
     window.scrollTo(0,0);
   }
+
+  // ── ROADMAP STATUS TRACKING ──────────────────────────────────────────────
+
+  var _roadmapRows = null;
+
+  function getRoadmapRows() {
+    if (_roadmapRows) return _roadmapRows;
+    var roadmap = document.getElementById('view-roadmap');
+    if (!roadmap) return [];
+    _roadmapRows = Array.from(roadmap.querySelectorAll('div[style*="grid-template-columns:110px 12px 1fr 200px 110px"]'));
+    return _roadmapRows;
+  }
+
+  function getTaskId(row) {
+    return row.getAttribute('data-task-id');
+  }
+
+  function getTaskName(row) {
+    var content = row.children[2];
+    if (!content) return '';
+    var titleEl = content.querySelector('div');
+    return titleEl ? titleEl.textContent.replace(/[📞🎉]/g, '').trim() : '';
+  }
+
+  function getStatus(taskId) {
+    return localStorage.getItem('rep-b2b-' + taskId) || 'open';
+  }
+
+  function renderRow(row, taskId) {
+    var status = getStatus(taskId);
+    row.setAttribute('data-status', status);
+
+    var cell = row.querySelector('.ts-cell');
+    if (!cell) return;
+
+    var progOn = status === 'in-progress';
+    var doneOn = status === 'done';
+
+    cell.innerHTML =
+      '<button class="ts-btn' + (progOn ? ' ts-on-prog' : '') + '" onclick="toggleStatus(this, \'in-progress\')">' +
+        (progOn ? '⟳ In Progress' : '◐ Progress') +
+      '</button>' +
+      '<button class="ts-btn' + (doneOn ? ' ts-on-done' : '') + '" onclick="toggleStatus(this, \'done\')">' +
+        (doneOn ? '✓ Done' : '○ Done') +
+      '</button>';
+  }
+
+  function toggleStatus(btn, newStatus) {
+    var cell = btn.closest('.ts-cell');
+    if (!cell) return;
+    var row = cell.closest('div[data-task-id]');
+    if (!row) return;
+    var taskId = row.getAttribute('data-task-id');
+    var cur = getStatus(taskId);
+    localStorage.setItem('rep-b2b-' + taskId, cur === newStatus ? 'open' : newStatus);
+    renderRow(row, taskId);
+    updateStatusSummary();
+  }
+
+  function initRoadmapStatuses() {
+    _roadmapRows = null;
+    var rows = getRoadmapRows();
+    rows.forEach(function(row, idx) {
+      var taskId = 'task-' + idx;
+      row.setAttribute('data-task-id', taskId);
+
+      // Replace the 5th column (status) with a button cell
+      var statusCol = row.children[4];
+      if (statusCol && !statusCol.classList.contains('ts-cell')) {
+        statusCol.className = 'ts-cell';
+        statusCol.removeAttribute('style');
+      }
+      renderRow(row, taskId);
+    });
+    updateStatusSummary();
+  }
+
+  function updateStatusSummary() {
+    var rows = getRoadmapRows();
+    var inProg = 0, done = 0;
+    rows.forEach(function(row) {
+      var s = getStatus(row.getAttribute('data-task-id'));
+      if (s === 'in-progress') inProg++;
+      if (s === 'done') done++;
+    });
+    var el = document.getElementById('status-summary');
+    if (!el) return;
+    if (inProg === 0 && done === 0) {
+      el.textContent = 'Track progress below — changes save automatically.';
+    } else {
+      el.textContent = done + ' done · ' + inProg + ' in progress · ' + (rows.length - done - inProg) + ' open';
+    }
+  }
+
+  function copySlackUpdate() {
+    var rows = getRoadmapRows();
+    var inProgress = [], done = [];
+    rows.forEach(function(row) {
+      var taskId = row.getAttribute('data-task-id');
+      var name = getTaskName(row);
+      if (!name) return;
+      var s = getStatus(taskId);
+      if (s === 'in-progress') inProgress.push(name);
+      if (s === 'done') done.push(name);
+    });
+
+    var lines = ['*REP Fitness B2B Roadmap — Status Update*', ''];
+    if (done.length) {
+      lines.push('*✅ Done:*');
+      done.forEach(function(n) { lines.push('  • ' + n); });
+      lines.push('');
+    }
+    if (inProgress.length) {
+      lines.push('*⟳ In Progress:*');
+      inProgress.forEach(function(n) { lines.push('  • ' + n); });
+      lines.push('');
+    }
+    if (!done.length && !inProgress.length) {
+      lines.push('No tasks marked yet.');
+    }
+    var text = lines.join('\n').trim();
+
+    var btn = document.getElementById('copy-slack-btn');
+    var orig = btn ? btn.textContent : '';
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() {
+        if (btn) { btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = orig; }, 2000); }
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (btn) { btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = orig; }, 2000); }
+    }
+  }
+
+  // Init on load (roadmap tab is hidden by default, so init runs when tab opens)
+  document.addEventListener('DOMContentLoaded', function() {
+    // If roadmap is somehow visible on load, init it
+    var rm = document.getElementById('view-roadmap');
+    if (rm && rm.style.display !== 'none') initRoadmapStatuses();
+  });
 </script>
 </body>
 </html>
